@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Treinos Inatel Esports</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="shortcut icon" href="../static/img/logo.ico" type="image/x-icon">
+    <style>
+        body{
+            background: url('../static/img/fundo.png');
+            
+        }
+
+        #add-service-btn {
+            display: block;
+            text-align: center;
+            width: fit-content;
+        }
+
+        #add-player-btn {
+            display: block;
+            text-align: center;
+            width: fit-content;
+        }
+
+        #player-btn {
+            border: none;
+        }
+
+        .card {
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar is-fixed-top is-light has-shadow" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="/">
+                    <img src="../static/img/intl.png" alt="Logo" >
+                </a>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                  <div class="buttons">
+                    <a class="button is-success" id="gerar-planilha-btn" href="/gerar_planilha">
+                        Gerar planilha de horas
+                    </a>
+                    <a class="button is-danger" id="encerrar-semestre-btn">
+                      Encerrar semestre
+                    </a>
+                  </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <h1 style="font-size: 24px;font-weight: bold;margin: 50px 0; text-align: center; color: black   ;">Bem-vindo a central de treinos do Inatel esports!</h1>
+            <br>
+            <br>
+            
+            <form action="" method="POST"  enctype="multipart/form-data">
+                <div class="field">
+                    <label class="label">Jogadores:</label>
+                    <select name="modalidade-lista-jogadores">
+                        <option value="Valorant">Valorant</option>
+                        <option value="Valorant Fem">Valorant Fem</option>
+                        <option value="League of Legends">League of Legends</option>
+                        <option value="League of Legends Fem">League of Legends Fem</option>
+                        <option value="CS GO">CS GO</option>
+                        <option value="CS GO Fem">CS GO Fem</option>
+                        <option value="Hearthstone">Hearthstone</option>
+                        <option value="FIFA">FIFA</option>
+                        <option value="TFT">TFT</option>
+                    </select>
+                    <button class="button is-primary" type="submit" id="mostrar-jogadores-btn" style="margin-left:10px; height: 28px;">Mostrar jogadores</button>
+
+                    <div>
+                    </div>
+                    
+                </div>
+
+            </form>
+            <br>
+
+            {%for i in jogadores%}
+            <form action=""  method="POST">
+                <div class="box">
+                        <div class="columns is-multiline">
+                            {%for key, value in i.items()%}
+                            <div class="column">
+                                {%if key == '_id'%}
+                                <p name="{{key}}" style="font-size: 15px;font-weight: bold; text-align: left; color: black;">Matrícula</p>
+                                {%elif key != '_id'%}
+                                <p name="{{key}}" style="font-size: 15px;font-weight: bold; text-align: left; color: black;">{{key}}</p>
+                                {%endif%}
+                                {%if key != '_id'%}
+                                {%if key == 'numero_horas_total'%}
+                                <p name="edit-{{key}}"> {{value}}</p>
+                                {%else%}
+                                <input class="w3-input" name="edit-{{key}}" value="{{value}}"></input>
+                                {%endif%}
+                                {%elif key == '_id'%}
+                                <p name="_id">{{value}}</p>
+                                <button class="button is-success" type="submit" name="editar-btn" style="height: 28px; margin-top: 10px;" formaction="/editar_jogador?{{key}}={{value}}">Salvar alterações</button>
+                                <button class="button is-danger" name="deletar-btn" style=" height: 28px; margin-top: 10px;" formaction="/deletar_jogador?_id={{value}}">Deletar</button>
+                                {%endif%}
+                            </div>
+                            {%endfor%}
+                        </div>
+                </div>
+            </form>
+            
+            {%endfor%}
+            <div>
+                <button class="button is-link " id="add-player-btn" style="margin-top: 20px;">Adicionar jogador</button>
+            </div>
+
+            
+
+            <br>
+            <br>
+            <div>
+                <h4 style="font-size: 18px;font-weight: bold;margin: 0px 0;">Treinos marcados:</h4>
+                <br>
+                <div class="columns is-multiline">
+                    {%for i in treinos%}
+                        <div class="column is-4">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="media">
+                                        {%for key, value in i.items()%}
+                                        
+                                        {%if key == 'modalidade_treino'%}
+                                        <div class="media-left">
+                                            <figure class="image is-48x48">
+                                              <img  src="../static/img/{{value}}.png">
+                                            </figure>
+                                            
+                                        </div>
+                                        <div class="media-content">
+                                            
+                                            <p  class="title is-4">{{value}}</p>
+                                            
+                                        </div>
+                                        {%endif%}
+                                        
+                                        {%endfor%}
+                                    </div>
+                                    {%for key, value in i.items()%}
+                                    <div class="content">
+                                        <form action=""  method="POST">
+                                            {%if key == '_id'%}
+                                            <button class="button is-danger is-light" name="deletar-treino-btn" style=" height: 28px; text-align: center; margin: o auto;" formaction="/deletar_treino?_id={{value}}">Deletar</button>
+                                            {%endif%}
+
+                                            {%if key == 'dias_semana_treino'%}
+                                            {%for j in range(i['horas_treino']|length)%}
+                                            
+                                            <div class="columns is-multiline">
+                                                <div class="column">
+                                                    <input class="w3-input" name="edit-dia{{j}}" value="{{value[j]}}"></input>
+                                                </div>
+                                                <div class="column">
+                                                    <input type="time" class="w3-input" name="edit-hora" value="{{i['horas_treino'][j]}}"></input>
+                                                </div>
+                                            </div>
+                                            {%endfor%}
+                                            {%endif%}
+                                        </form>
+                                    </div>
+                                    
+                                    {%endfor%}
+                                    
+                                </div>
+                                
+                            </div>
+                        </div>
+                        {%endfor%}
+                </div>
+            </div>
+
+            <br>
+
+            <div>
+                <button class="button is-link" id="add-treino-btn">Adicionar treino</button>
+            </div>
+
+            <br>
+            <br>
+
+            <section>
+                <h4 style="font-size: 18px;font-weight: bold;margin: 0px 0;">Treinos realizados:</h4>
+                <br>
+                <div class="columns is-multiline">
+                    {%for i in treinos_realizados%}
+                    {%if i['jogadores_presentes']%}
+                    <div class="column is-3">
+                        <div class="card ad-card" data-ad-id="">
+                            <div class="card-content">
+                                <div class="media">
+                                    {%for key, value in i.items()%}
+                                    {%if key == 'modalidade_treino_realizado'%}
+                                    <div class="media-left">
+                                        <figure class="image is-48x48">
+                                          <img  src="../static/img/{{value}}.png">
+                                        </figure>
+                                        
+                                    </div>
+                                    <div class="media-content">
+                                        
+                                        <p  class="title is-4">{{value}}</p>
+                                        <p class="subtitle is-6">Jogadores</p>
+                                    </div>
+                                    {%endif%}   
+                                    {%endfor%}
+                                </div>
+                                {%for key, value in i.items()%}
+                                    {%if key == 'criado_em'%}
+                                    <div class="content">
+                                        <p style="font-weight: bold">
+                                            {%for j in range(i['jogadores_presentes']|length)%}
+                                            / {{i['jogadores_presentes'][j]}} /
+                                            {%endfor%}
+                                        </p>
+                                        <time style="font-style: italic;" datetime="2016-1-1">{{value}}</time>
+                                    </div>
+                                {%endif%}
+                                {%endfor%}
+                            </div>
+                        </div>
+                    </div>
+                    {%endif%}
+                    {%endfor%}
+        
+                </div>
+            </section>
+
+        </div>
+    </section>
+
+    
+
+    <div class="modal" id="add-treino-modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <h3 class="title">Adicionar treino</h3> 
+                <form action="" method="POST"  enctype="multipart/form-data">
+                    <div class="field">
+                        <label class="label">Modalidade:</label>
+                        <select name="modalidade-treino">
+                            <option value="Valorant">Valorant</option>
+                            <option value="Valorant Fem">Valorant Fem</option>
+                            <option value="League of Legends">League of Legends</option>
+                            <option value="League of Legends Fem">League of Legends Fem</option>
+                            <option value="CS GO">CS GO</option>
+                            <option value="CS GO Fem">CS GO Fem</option>
+                            <option value="Hearthstone">Hearthstone</option>
+                            <option value="FIFA">FIFA</option>
+                            <option value="TFT">TFT</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <div id="lines"></div>
+                        <button type="button" onclick="addInput('lines')">+</button>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-primary" type="submit" formaction="/adicionar_treino">Adicionar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+        
+    </div>
+
+    <div class="modal" id="add-player-modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <h3 class="title">Adicionar jogador</h3> 
+                <form action="" method="POST"  enctype="multipart/form-data">
+                    <div class="field">
+                        <label class="label">Nome:</label>
+                        <div class="control">
+                            <input type="text" name="name" required placeholder="Nome"></input>
+                        </div>
+
+                        <label class="label">Matricula:</label>
+                        <div class="control">
+                            <input type="number" name="matricula" required placeholder="Matrícula"></input>
+                        </div>
+
+                        <label class="label">Nome do discord:</label>
+                        <div class="control">
+                            <input type="text" name="discord-name" required placeholder="Nome do discord"></input>
+                        </div>
+
+                        <label class="label">Curso:</label>
+                        <div class="control">
+                            <input type="text" name="curso" required placeholder="Curso"></input>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Modalidade:</label>
+                        <select name="modalidade">
+                            <option value="Valorant">Valorant</option>
+                            <option value="Valorant Fem">Valorant Fem</option>
+                            <option value="League of Legends">League of Legends</option>
+                            <option value="League of Legends Fem">League of Legends Fem</option>
+                            <option value="CS GO">CS GO</option>
+                            <option value="CS GO Fem">CS GO Fem</option>
+                            <option value="Hearthstone">Hearthstone</option>
+                            <option value="FIFA">FIFA</option>
+                            <option value="TFT">TFT</option>
+                            <option value="Streamer">Streamer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-primary" type="submit">Adicionar</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+    
+    <div class="modal" id="encerrar-semestre-modal">
+        <div class="modal-background"></div>
+        <div class=" modal-content">
+            <div class="box">
+                <h3 class="title is-4">Tem certeza que deseja encerrar o semestre?</h3>
+                <div>
+                    <a class="button is-danger" href="/encerrar_semestre">Encerrar semestre</a>
+                    <a class="button is-primary" href="/">Fechar</a>
+                </div>
+            </div>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Close modal
+            $(".modal-close").click(function () {
+                $(this).closest(".modal").removeClass("is-active");
+            });
+
+            $("#add-treino-btn").click(function () {
+                $("#add-treino-modal").addClass("is-active");
+            });
+
+            $("#add-player-btn").click(function () {
+                $("#add-player-modal").addClass("is-active");
+            });
+
+            $("#encerrar-semestre-btn").click(function () {
+                $("#encerrar-semestre-modal").addClass("is-active");
+            });
+
+        });
+    </script>
+
+    <script>
+        var line = 1;
+        function addInput(divName) {
+        var newdiv = document.createElement('div');
+        newdiv.innerHTML  = '['+line +']';
+        newdiv.innerHTML += `<select name=dia-semana{0}>
+                            <option value="Segunda">Segunda</option>
+                            <option value="Terça">Terça</option>
+                            <option value="Quarta">Quarta</option>
+                            <option value="Quinta">Quinta</option>
+                            <option value="Sexta">Sexta</option>
+                            <option value="Sábado">Sábado</option>
+                            <option value="Domingo">Domingo</option>
+                        </select>`;
+        newdiv.innerHTML = newdiv.innerHTML.replace("{0}", line)
+        newdiv.innerHTML += '<input type="time" name="hora'+line +'" id="hora-treino" required>';
+        document.getElementById(divName).appendChild(newdiv);
+        line++;
+}
+
+addInput('lines');
+    </script>
+
+</body>
+
+</html>
