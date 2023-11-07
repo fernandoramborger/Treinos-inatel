@@ -404,6 +404,29 @@
 addInput('lines');
     </script>
 
+{% set menssagem = get_flashed_messages() %}
+{% if menssagem[0] == 'Jogador cadastrado com sucesso!' %}
+<script>
+    window.alert('Jogador cadastrado com sucesso!')
+</script>
+{%elif menssagem[0] == 'Número de matrícula já cadastrado!'%}
+<script>
+    window.alert('Número de matrícula já cadastrado!')
+</script>
+{%elif menssagem[0] == 'Jogador deletado!'%}
+<script>
+    window.alert('Jogador deletado!')
+</script>
+{%elif menssagem[0] == 'Informações alteradas!'%}
+<script>
+    window.alert('Informações alteradas!')
+</script>
+{%elif menssagem[0] == 'Semestre encerrado, a planilha foi gerada e os dados foram restaurados!'%}
+<script>
+    window.alert('Semestre encerrado, a planilha foi gerada e os dados foram restaurados!')
+</script>
+{%endif%}
+
 </body>
 
 </html>

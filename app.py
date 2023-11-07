@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
 import pymongo
 from pymongo import MongoClient
@@ -44,21 +44,26 @@ def home():
   modalidade_lista_jogadores = request.form.get('modalidade-lista-jogadores')
 
   if jogador is not None and matricula is not None and nome_discord is not None and curso is not None and modalidade is not None:
-    collection_jogadores.insert_one({
-        "_id": matricula,
-        "jogador": jogador,
-        "nome_discord": nome_discord,
-        "curso": curso,
-        "modalidade": modalidade,
-        "numero_horas_total": 0.0
-    })
+    try:
+      collection_jogadores.insert_one({
+          "_id": matricula,
+          "jogador": jogador,
+          "nome_discord": nome_discord,
+          "curso": curso,
+          "modalidade": modalidade,
+          "numero_horas_total": 0.0
+      })
+      flash('Jogador cadastrado com sucesso!')
+    except:
+      flash('Número de matrícula já cadastrado!')
 
   jogadores = collection_jogadores.find(
       {"modalidade": "{}".format(modalidade_lista_jogadores)})
 
   treinos = collection_treinos_marcados.find({})
 
-  treinos_realizados = collection_treinos_realizados.find({}).sort('criado_em', -1)
+  treinos_realizados = collection_treinos_realizados.find({}).sort(
+      'criado_em', -1)
 
   return render_template('treinos.html',
                          jogadores=jogadores,
@@ -71,6 +76,7 @@ def del_jogador():
   id_jogador = request.args.get('_id')
 
   collection_jogadores.delete_one({'_id': id_jogador})
+  flash('Jogador deletado!')
 
   return redirect('/')
 
@@ -91,6 +97,7 @@ def edit_jogador():
           "modalidade": modalidade_edit
       }
   })
+  flash('Informações alteradas!')
 
   return redirect('/')
 
@@ -154,6 +161,9 @@ def delete_info():
   collection_treinos_realizados.delete_many({})
   collection_registros.delete_many({})
   collection_jogadores.update_many({}, {"$set": {'numero_horas_total': 0.0}})
+  flash(
+      'Semestre encerrado, a planilha foi gerada e os dados foram restaurados!'
+  )
 
   return redirect(
       url_for('static', filename="Treinos_esports" + data_planilha + ".csv"))
