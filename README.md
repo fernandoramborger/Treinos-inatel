@@ -5,10 +5,7 @@
 
 ## Para executar o projeto
 1. Clonar o repositório
-```bash
-git clone https://github.com/fernandoramborger/TCC.git
-cd TCC
-```
+
 2. Instalar as dependências
 ```bash
 pip install -r requirements.txt
